@@ -1,14 +1,613 @@
-<script>
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Website Sekolah Modern</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
+
+  <style>
+    :root {
+      --primary: #ff3366;
+      --accent: #00cc99;
+      --dark: #0b0f1a;
+      --light: #f6f7fb;
+      --radius: 12px;
+      --shadow-sm: 0 4px 15px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.12);
+    }
+    html, body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--light);
+      color: var(--dark);
+    }
+    h1, h2, h3, h4, h5, h6 { font-weight: 700; }
+    h1 { font-size: 1.8rem; }
+    h2 { font-size: 1.5rem; }
+    h3 { font-size: 1.3rem; }
+    h4 { font-size: 1.1rem; }
+    h5 { font-size: 1rem; }
+    h6 { font-size: 0.9rem; }
+    .btn-primary {
+      background: linear-gradient(90deg, var(--primary), #ff5d86);
+      border: none;
+      font-weight: 500;
+      border-radius: var(--radius);
+      box-shadow: 0 6px 18px rgba(255, 51, 102, 0.2);
+      transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+      opacity: 0.9;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(255, 51, 102, 0.3);
+    }
+    .btn-outline-light {
+      border: 1px solid white;
+      color: white;
+      border-radius: var(--radius);
+      transition: all 0.3s ease;
+    }
+    .btn-outline-light:hover {
+      background-color: white;
+      color: var(--primary);
+      border-color: white;
+    }
+    .navbar-brand {
+      font-weight: 800;
+      color: var(--dark) !important;
+    }
+    .nav-link {
+      font-weight: 500;
+      transition: color 0.3s, border-color 0.3s;
+    }
+    .nav-link.active {
+      font-weight: 700;
+      color: var(--primary) !important;
+      border-bottom: 3px solid var(--primary);
+      padding-bottom: 5px;
+    }
+    .navbar-light .navbar-nav .nav-link:hover {
+      color: var(--primary);
+    }
+    @media (max-width: 992px) {
+      .navbar-toggler {
+        border: 2px solid transparent;
+        border-image: linear-gradient(90deg, var(--primary), var(--accent)) 1;
+        border-radius: 0.375rem;
+        padding: 6px 10px;
+        transition: all 0.3s ease;
+      }
+      .navbar-toggler:hover,
+      .navbar-toggler:focus {
+        border-image: linear-gradient(90deg, var(--accent), var(--primary)) 1;
+        box-shadow: 0 0 8px rgba(255, 51, 102, 0.3);
+      }
+    }
+    .overdrive-hero {
+      background: linear-gradient(135deg, rgba(255, 51, 102, 0.85), rgba(0, 204, 153, 0.7)),
+        url('https://drive.google.com/thumbnail?id=1SaNubYWyZhPuD-LI6eQsK1i3y6p-TtGG&sz=w900') center/cover no-repeat;
+      border-radius: 20px;
+      padding: 120px 64px;
+      color: white;
+      box-shadow: var(--shadow-md);
+      min-height: 400px;
+      display: flex;
+      align-items: center;
+    }
+    .hero-title {
+      font-size: 2.75rem;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+    @media (max-width: 768px) {
+      .overdrive-hero {
+        padding: 80px 32px;
+        min-height: 360px;
+        text-align: center;
+      }
+      .hero-title {
+        font-size: 2rem;
+      }
+    }
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 10px;
+    }
+    .section-title i {
+      color: var(--primary);
+    }
+    .card-overdrive {
+      position: relative;
+      border: 0;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      overflow: hidden;
+    }
+    .card-overdrive:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+    .card-img-top {
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+    }
+    .blog-card .card-body {
+      min-height: 180px;
+    }
+    .fade-in {
+      animation: fadeIn 0.6s ease-in;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .modern-list li {
+      padding: 8px 12px;
+      background: #f9fafb;
+      border-radius: 8px;
+      transition: 0.2s;
+    }
+    .modern-list li:hover {
+      background: #e0f2fe;
+      transform: translateX(5px);
+    }
+    .card {
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+      background: #fff;
+    }
+    .card h2, .card h3, .card h4 {
+      color: #212529 !important;
+    }
+    .statistik-card {
+      padding: 24px;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: 12px;
+      background: #fff;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+      transition: all 0.25s ease;
+    }
+    .statistik-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
+    }
+    .text-purple {
+      color: #6f42c1 !important;
+    }
+    .statistik-card[data-bg="biru"] {
+      background: linear-gradient(135deg, #e0f2ff, #b8e0ff);
+    }
+    .statistik-card[data-bg="hijau"] {
+      background: linear-gradient(135deg, #e6f9ec, #c8f0d1);
+    }
+    .statistik-card[data-bg="ungu"] {
+      background: linear-gradient(135deg, #efe6ff, #d8c9ff);
+    }
+    .about-section {
+      margin-top: 40px;
+    }
+    .about-section .card {
+      margin-bottom: 24px;
+    }
+    #announcementList .list-group-item {
+      margin-bottom: 12px;
+      border-radius: 8px;
+      border: 1px solid #eee;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    #announcementList .list-group-item:last-child {
+      margin-bottom: 0;
+    }
+    #announcementList .list-group-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+    .calendar-card {
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+      background: #fff;
+    }
+    .fc-toolbar.fc-header-toolbar {
+      margin-bottom: 1.5rem;
+      padding: 0;
+    }
+    .fc .fc-toolbar-title {
+      font-size: 1.4rem !important;
+      font-weight: 700;
+      color: var(--dark);
+    }
+    .fc .fc-button {
+      background: linear-gradient(90deg, var(--primary), #ff5d86) !important;
+      border: none !important;
+      color: white !important;
+      border-radius: 50px !important;
+      padding: 0.5rem 1.2rem !important;
+      font-size: 0.9rem !important;
+      font-weight: 600;
+      text-transform: capitalize;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s ease;
+      margin: 0 2px;
+    }
+    .fc .fc-button:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+      opacity: 0.95;
+    }
+    .fc .fc-button-primary:not(:disabled).fc-button-active,
+    .fc .fc-button-primary:not(:disabled):active {
+      transform: translateY(1px);
+      box-shadow: none;
+    }
+    .fc .fc-col-header-cell-cushion {
+      color: #888;
+      font-weight: 600;
+      text-decoration: none;
+      padding: 1rem 0;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      text-align: center;
+    }
+    .fc .fc-daygrid-day-number {
+      color: var(--dark) !important;
+      font-weight: 500;
+      padding: 0.5rem 0;
+      text-decoration: none;
+      text-align: center;
+      width: 100%;
+    }
+    .fc .fc-day-today {
+      background-color: #fff4f7 !important;
+    }
+    .fc .fc-day-today .fc-daygrid-day-number {
+      color: var(--primary) !important;
+      font-weight: 700;
+    }
+    .fc-event {
+      background: linear-gradient(90deg, var(--primary), #ff5d86) !important;
+      color: #fff !important;
+      border: none !important;
+      border-radius: 8px !important;
+      padding: 5px 8px !important;
+      font-size: 0.8rem !important;
+      font-weight: 500;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    .fc-event:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+    .fc-daygrid-event-harness {
+      margin: 2px 4px;
+    }
+    .container-footer {
+      width: 100%;
+      max-width: 1298px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      border-radius: 20px;
+      padding: 64px;
+      color: #fff;
+      box-shadow: var(--shadow-md);
+    }
+    .footer-card {
+      margin-top: 50px;
+      margin-bottom: 40px;
+      display: flex;
+      justify-content: center;
+      background: transparent;
+    }
+    .footer-card a {
+      color: rgba(255, 255, 255, 0.8);
+      transition: 0.2s;
+    }
+    .footer-card a:hover {
+      color: #fff;
+      text-shadow: 0 0 5px rgba(255, 255, 255, 0.6);
+    }
+    @media (max-width: 992px) {
+      .container-footer {
+        max-width: 95%;
+        padding: 40px 30px;
+        border-radius: 16px;
+      }
+    }
+    #preloader {
+      position: fixed;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(2px);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 1;
+      transition: opacity 0.5s ease;
+    }
+    #preloader.fade-out {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .spinner-border {
+      color: var(--primary) !important;
+    }
+    .alert-warning {
+      background: linear-gradient(135deg, #fff4e0, #ffe9c7);
+      border: 1px solid #ffc107;
+      color: #5a3d00;
+    }
+    #announcementCard {
+      animation: pulseAttention 2s infinite;
+    }
+    @keyframes pulseAttention {
+      0% { box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.5); }
+      70% { box-shadow: 0 0 0 10px rgba(255, 193, 7, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(255, 193, 7, 0); }
+    }
+    .pagination-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-pagination {
+      border: 1px solid #ddd;
+      background: #fff;
+      padding: 4px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-pagination.active {
+      background-color: var(--primary);
+      color: white;
+      border-color: var(--primary);
+      font-weight: bold;
+    }
+    .btn-pagination:hover:not(:disabled) {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+    .btn-pagination:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .interaction-wrapper {
+      margin-top: 24px;
+    }
+    .like-button {
+      font-size: 1.1rem;
+      font-weight: 600;
+      border-radius: 50px;
+      padding: 8px 16px;
+      transition: all 0.2s ease;
+    }
+    .like-button .bi {
+      font-size: 1.3rem;
+      margin-right: 4px;
+    }
+    .like-button.liked {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+    .like-button.not-liked {
+      background: #fff;
+      color: var(--primary);
+      border: 1px solid var(--primary);
+    }
+    .like-button.not-liked:hover {
+      background: #fff4f7;
+    }
+    .card-like-button {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      z-index: 10;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid #eee;
+      border-radius: 50px;
+      padding: 4px 10px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--dark);
+      transition: all 0.2s ease;
+    }
+    .card-like-button .bi {
+      font-size: 1rem;
+      margin-right: 2px;
+    }
+    .card-like-button.liked {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+    .card-like-button.liked .bi {
+      color: white !important;
+    }
+    .card-like-button.not-liked .bi {
+      color: var(--primary);
+    }
+    .card-like-button:hover {
+      transform: scale(1.05);
+      box-shadow: var(--shadow-sm);
+    }
+    .comment-section {
+      margin-top: 24px;
+    }
+    .comment-list {
+      list-style: none;
+      padding-left: 0;
+      margin-top: 16px;
+    }
+    .comment-item {
+      background: #f8f9fa;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-bottom: 12px;
+    }
+    .comment-item .comment-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+    .comment-item .comment-user {
+      font-weight: 600;
+      color: var(--dark);
+    }
+    .comment-item .comment-date {
+      font-size: 0.8rem;
+      color: #6c757d;
+    }
+    .comment-item .comment-body {
+      font-size: 0.95rem;
+      color: #343a40;
+      word-wrap: break-word;
+    }
+    .comment-item .comment-delete {
+      font-size: 0.8rem;
+      color: var(--primary);
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+      margin-top: 4px;
+    }
+    .comment-item .comment-delete:hover {
+      text-decoration: underline;
+    }
+    .comment-form .form-control {
+      border-radius: 8px;
+    }
+    .comment-form .form-control:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 0.25rem rgba(255, 51, 102, 0.25);
+    }
+    
+    /* EFEK PUTAR IKON REFRESH */
+    .animate-spin {
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+  </style>
+
+
+</head>
+
+<body class="bg-light">
+
+  <div id="preloader">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="#" onclick="navigateTo('home')">
+        <img src="https://drive.google.com/thumbnail?id=1TZcG1qg_hhYGK1yU5znbEW22JcLEFjFU&sz=w200" alt="Logo"
+          style="width:34px;height:34px;margin-right:8px;">
+        SDN Pondok Pinang 01
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="nav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="#home" data-page="home"><i
+                class="bi bi-house-door me-1"></i>Beranda</a></li>
+          <li class="nav-item"><a class="nav-link" href="#kegiatan" data-page="kegiatan">
+              <i class="bi bi-play-circle me-1"></i>Kegiatan
+            </a></li>
+          <li class="nav-item"><a class="nav-link" href="#gallery" data-page="gallery"><i
+                class="bi bi-images me-1"></i>Gallery</a></li>
+          <li class="nav-item"><a class="nav-link" href="#blog" data-page="blog"><i
+                class="bi bi-journal-text me-1"></i>Blog</a></li>
+          <li class="nav-item"><a class="nav-link" href="#announcement" data-page="announcement"><i
+                class="bi bi-megaphone me-1"></i>Pengumuman</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container my-5" id="app">
+    </main>
+
+  <footer class="footer-card text-white mt-5">
+    <div class="container-footer">
+      <div class="row text-start">
+        <div class="col-12 col-md-4 mb-3">
+          <h6 class="fw-bold text-uppercase mb-2">Alamat Sekolah</h6>
+          <p class="mb-1">Jl. Pondok Pinang Raya No.19</p>
+          <p class="mb-1">Kecamatan Kebayoran Lama, Kota Jaksel</p>
+          <p class="mb-0">Provinsi DKI Jakarta</p>
+        </div>
+
+        <div class="col-12 col-md-4 mb-3">
+          <h6 class="fw-bold text-uppercase mb-2">Kontak</h6>
+          <p class="mb-1">Telepon: (021) 38805100</p>
+          <p class="mb-1">Email: pondokpinangsd01@gmail.com</p>
+          <p class="mb-0">Jam Layanan: 07.00 - 15.00</p>
+        </div>
+
+        <div class="col-12 col-md-4 mb-3">
+          <h6 class="fw-bold text-uppercase mb-2">Sosial Media</h6>
+          <a href="#" class="d-block text-decoration-none text-white-50 mb-1">
+            <i class="bi bi-facebook me-1"></i> Facebook
+          </a>
+          <a href="#" class="d-block text-decoration-none text-white-50 mb-1">
+            <i class="bi bi-instagram me-1"></i> Instagram
+          </a>
+          <a href="#" class="d-block text-decoration-none text-white-50">
+            <i class="bi bi-youtube me-1"></i> YouTube
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-bottom text-center pt-3 mt-3 border-top border-light-subtle">
+        <small>
+          &copy; <span id="year"></span> SDN Pondok Pinang 01 |
+          <a href="#" onclick="goAdmin(event)" class="text-white text-decoration-underline">Admin</a>
+        </small>
+      </div>
+    </div>
+  </footer>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <script>
     
     // ⬇️ PERUBAHAN: URL API sekarang adalah proxy lokal ⬇️
     const WEB_APP_URL = "/api"; 
     
     // ⬇️ PENTING: GANTI DENGAN URL ADMIN ANDA ⬇️
+    // Anda sudah mengisi ini, jadi saya gunakan URL Anda
     const ADMIN_PANEL_URL = "https://script.google.com/macros/s/AKfycbwGtCKXSm-VlU8Ml-512ErKvhqUDFbgtLz1eLcWrpZrZhrKPsvquVxcTiM0P3XbPDI/exec?page=admin"; 
 
 
     /* ============================================================
-        API HELPER (MENGGUNAKAN FETCH KE PROXY)
+        API HELPER (MENGGUNAKAN FETCH KE PROXY) - VERSI PERBAIKAN FINAL
         ============================================================ */
     function api(method, args) {
       return new Promise(async (resolve, reject) => {
@@ -17,6 +616,9 @@
         let url = WEB_APP_URL;
         let options = {
           method: 'GET',
+          headers: {
+            'Content-Type': 'text/plain;charset=utf-f8',
+          }
         };
 
         try {
@@ -32,7 +634,8 @@
             const response = await fetch(url, options);
             if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
             
-            const data = await response.json(); // Proxy mengirim JSON murni
+            const textResponse = await response.text();
+            const data = JSON.parse(textResponse);
 
             if (data.success === false) {
               throw new Error(data.error);
@@ -57,7 +660,8 @@
             const response = await fetch(url, options);
             if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
             
-            const data = await response.json();
+            const textResponse = await response.text();
+            const data = JSON.parse(textResponse);
             
             if (data.success === false) {
               throw new Error(data.error);
@@ -66,7 +670,13 @@
           }
         } catch (error) {
           console.error(`API Error (${method}):`, error.message);
-          reject(error);
+          if (error.message.includes("Failed to fetch")) {
+               reject(new Error("Failed to fetch (Gagal terhubung ke server). Periksa URL WEB_APP_URL Anda."));
+          } else if (error.message.includes("Unexpected token")) {
+               reject(new Error("Gagal parsing JSON. Kemungkinan URL WEB_APP_URL salah atau backend error."));
+          } else {
+               reject(error);
+          }
         }
       });
     }
@@ -110,54 +720,54 @@
     }
 
     /* ============================================================
-    EVENT INIT (Digabung)
-    ============================================================ */
-document.addEventListener("DOMContentLoaded", () => {
-  // Cek jika URL Admin belum diisi (cek ini boleh tetap ada)
-  if (ADMIN_PANEL_URL.startsWith("GANTI_DENGAN")) {
-      alert("Peringatan: URL Admin di file index.html belum diatur.");
-  }
-  
-  // Inisialisasi Router
-  let path = "";
+        EVENT INIT (Digabung)
+        ============================================================ */
+    document.addEventListener("DOMContentLoaded", () => {
+      // Cek jika URL Admin belum diisi (cek ini boleh tetap ada)
+      if (ADMIN_PANEL_URL.startsWith("GANTI_DENGAN")) {
+        alert("Peringatan: URL Admin di file index.html belum diatur.");
+      }
+      
+      // Inisialisasi Router
+      let path = "";
 
-  // 1. Cek HASH dulu (untuk klik internal #blog)
-  path = window.location.hash.replace("#", "");
+      // 1. Cek HASH dulu (untuk klik internal #blog)
+      path = window.location.hash.replace("#", "");
 
-  // 2. Jika HASH kosong, cek PATHNAME (untuk link langsung /blog)
-  if (!path) {
-    path = window.location.pathname.replace(/^\/|\/$/g, ""); // Hapus / di awal dan akhir
-  }
-  
-  // 3. Jika semua kosong, set ke 'home'
-  if (!path || path === 'index.html' || path === '/') {
-    path = 'home';
-  }
-  
-  // 4. Sinkronkan URL (ubah /blog jadi #blog)
-  if (window.location.hash.replace("#", "") !== path) {
-    history.replaceState({ page: path }, "", "#" + path);
-  }
+      // 2. Jika HASH kosong, cek PATHNAME (untuk link langsung /blog)
+      if (!path) {
+        path = window.location.pathname.replace(/^\/|\/$/g, ""); // Hapus / di awal dan akhir
+      }
+      
+      // 3. Jika semua kosong, set ke 'home'
+      if (!path || path === 'index.html' || path === '/') {
+        path = 'home';
+      }
+      
+      // 4. Sinkronkan URL (ubah /blog jadi #blog)
+      if (window.location.hash.replace("#", "") !== path) {
+        history.replaceState({ page: path }, "", "#" + path);
+      }
 
-  renderPage(path);
-  const mainPage = path.split('/')[0];
-  setActiveMenu(mainPage);
+      renderPage(path);
+      const mainPage = path.split('/')[0];
+      setActiveMenu(mainPage);
 
-  // Inisialisasi Klik Navbar
-  document.querySelectorAll("a[data-page]").forEach(el => {
-    el.addEventListener("click", e => {
-      e.preventDefault();
-      const page = el.getAttribute("data-page");
-      navigateTo(page);
+      // Inisialisasi Klik Navbar
+      document.querySelectorAll("a[data-page]").forEach(el => {
+        el.addEventListener("click", e => {
+          e.preventDefault();
+          const page = el.getAttribute("data-page");
+          navigateTo(page);
+        });
+      });
+      
+      // Inisialisasi Tahun di Footer
+      const yearEl = document.getElementById('year');
+      if (yearEl) {
+          yearEl.innerText = new Date().getFullYear();
+      }
     });
-  });
-  
-  // Inisialisasi Tahun di Footer
-  const yearEl = document.getElementById('year');
-  if (yearEl) {
-      yearEl.innerText = new Date().getFullYear();
-  }
-});
 
     /* ============================================================
         PRELOADER CONTROL
@@ -199,7 +809,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function formatTanggal(dateString) {
       if (!dateString) return "";
-      return new Date(dateString).toLocaleDateString('id-ID', {
+      // Tambahkan T00:00:00 untuk tanggal agar konsisten
+      let date = new Date(dateString);
+      if(dateString.length === 10) { // Cek jika hanya YYYY-MM-DD
+        date = new Date(dateString + 'T00:00:00');
+      }
+      return date.toLocaleDateString('id-ID', {
         day: 'numeric',
         month: 'long',
         year: 'numeric',
@@ -214,6 +829,12 @@ document.addEventListener("DOMContentLoaded", () => {
         ============================================================ */
     async function renderPage(path) {
       const container = document.getElementById('app');
+
+      if (!container) {
+          console.error("Fatal Error: Elemen #app tidak ditemukan. Hentikan renderPage.");
+          hidePreloader();
+          return; 
+      }
 
       const pathSegments = path.split('/');
       const page = pathSegments[0] || 'home';
@@ -239,7 +860,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
           } else {
             // 3. Routing Halaman List
-            if (page === 'home' || page === '') { // <-- Tangani string kosong
+            if (page === 'home' || page === '') { 
               container.innerHTML = renderHomeSkeleton();
               requestAnimationFrame(() => {
                 refreshAnnouncement(); 
@@ -849,7 +1470,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       try {
         const result = await api('deleteComment', [commentId]);
-        if (result.success) { // Perhatikan: API delete saya sebelumnya mungkin hanya mengembalikan {success: true}
+        if (result.success) { 
           document.getElementById(`comment-${commentId}`).remove();
 
           const countEl = document.getElementById('commentCount');
@@ -1167,7 +1788,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
-    // Efek putar ikon refresh
+    // Efek putar ikon refresh (dipindah dari style ke sini)
     document.head.insertAdjacentHTML("beforeend", `<style>.animate-spin{animation: spin 1s linear infinite;} @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}</style>`);
 
   </script>
