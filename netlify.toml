@@ -1,0 +1,14 @@
+[build]
+  functions = "functions"  # <-- INI SUDAH DIPERBAIKI
+
+# Ini adalah aturan untuk Proxy
+[[redirects]]
+  from = "/api"
+  to = "/.netlify/functions/proxy"
+  status = 200
+
+# Ini adalah aturan untuk SPA (menggantikan file _redirects)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
