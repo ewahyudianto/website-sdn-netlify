@@ -618,7 +618,7 @@
         let options = {
           method: 'GET',
           headers: {
-            'Content-Type': 'text/plain;charset=utf-8',
+            'Content-Type': 'text/plain;charset=utf-f8',
           }
         };
 
@@ -635,10 +635,8 @@
             const response = await fetch(url, options);
             if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
             
-            // ⬇️ PERBAIKAN UTAMA ADA DI SINI ⬇️
-            const textResponse = await response.text();
-            const data = JSON.parse(textResponse);
-            // ⬆️ AKHIR PERBAIKAN ⬆️
+            // ⬇️ PERBAIKAN UTAMA: Langsung baca sebagai JSON ⬇️
+            const data = await response.json(); 
 
             if (data.success === false) {
               throw new Error(data.error);
@@ -663,10 +661,8 @@
             const response = await fetch(url, options);
             if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
             
-            // ⬇️ PERBAIKAN UTAMA ADA DI SINI ⬇️
-            const textResponse = await response.text();
-            const data = JSON.parse(textResponse);
-            // ⬆️ AKHIR PERBAIKAN ⬆️
+            // ⬇️ PERBAIKAN UTAMA: Langsung baca sebagai JSON ⬇️
+            const data = await response.json();
             
             if (data.success === false) {
               throw new Error(data.error);
