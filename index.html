@@ -598,7 +598,8 @@
   
   <script>
     
-    // ⬇️ PERUBAHAN: URL API sekarang adalah proxy lokal ⬇️
+    // ⬇️ PENTING: GANTI DENGAN URL WEB APP ANDA DARI LANGKAH 1 ⬇️
+    // Anda sudah mengisi ini, jadi saya gunakan URL Anda
     const WEB_APP_URL = "/api"; 
     
     // ⬇️ PENTING: GANTI DENGAN URL ADMIN ANDA ⬇️
@@ -634,8 +635,8 @@
             const response = await fetch(url, options);
             if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
             
-            const textResponse = await response.text();
-            const data = JSON.parse(textResponse);
+            // ⬇️ PERBAIKAN UTAMA: Langsung baca sebagai JSON ⬇️
+            const data = await response.json(); 
 
             if (data.success === false) {
               throw new Error(data.error);
@@ -660,8 +661,8 @@
             const response = await fetch(url, options);
             if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
             
-            const textResponse = await response.text();
-            const data = JSON.parse(textResponse);
+            // ⬇️ PERBAIKAN UTAMA: Langsung baca sebagai JSON ⬇️
+            const data = await response.json();
             
             if (data.success === false) {
               throw new Error(data.error);
@@ -670,13 +671,15 @@
           }
         } catch (error) {
           console.error(`API Error (${method}):`, error.message);
+          
+          let userMessage = `Error: ${error.message}`;
           if (error.message.includes("Failed to fetch")) {
-               reject(new Error("Failed to fetch (Gagal terhubung ke server). Periksa URL WEB_APP_URL Anda."));
+             userMessage = "Gagal terhubung ke server proxy. Periksa file netlify.toml.";
           } else if (error.message.includes("Unexpected token")) {
-               reject(new Error("Gagal parsing JSON. Kemungkinan URL WEB_APP_URL salah atau backend error."));
-          } else {
-               reject(error);
+             userMessage = "Gagal parsing JSON. Backend proxy atau Apps Script mungkin error.";
           }
+          
+          reject(new Error(userMessage));
         }
       });
     }
@@ -809,18 +812,22 @@
 
     function formatTanggal(dateString) {
       if (!dateString) return "";
-      // Tambahkan T00:00:00 untuk tanggal agar konsisten
       let date = new Date(dateString);
-      if(dateString.length === 10) { // Cek jika hanya YYYY-MM-DD
+      if(dateString.length === 10) { 
         date = new Date(dateString + 'T00:00:00');
       }
+      if (isNaN(date.getTime())) {
+          return dateString; 
+      }
+      if (dateString.includes('T')) {
+        return date.toLocaleDateString('id-ID', {
+          day: 'numeric', month: 'long', year: 'numeric',
+          hour: '2-digit', minute: '2-digit'
+        }) + " WIB";
+      }
       return date.toLocaleDateString('id-ID', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      }) + " WIB";
+          day: 'numeric', month: 'long', year: 'numeric'
+      });
     }
 
 
@@ -927,7 +934,7 @@
                 <img src="${item.coverUrl || 'https://picsum.photos/600/300'}" class="card-img-top" alt="${escapeHtml(item.title)}">
                 <div class="card-body d-flex flex-column">
                   <h5 class="card-title h6 fw-bold">${escapeHtml(item.title)}</h5>
-                  <p class="card-text text-muted small mb-2">${new Date(item.date + 'T00:00:00').toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                  <p class="card-text text-muted small mb-2">${formatTanggal(item.date)}</p>
                   <p class="card-text flex-grow-1 small">${escapeHtml((item.excerpt || stripHtml(item.content)).substring(0, 100))}...</p>
                   <span class="btn btn-primary mt-auto align-self-start">Baca Selengkapnya</span>
                 </div>
@@ -981,7 +988,7 @@
                 <img src="${item.imageUrl}" alt="${escapeHtml(item.title)}" class="card-img-top rounded">
                 <div class="card-body d-flex flex-column">
                   <h5 class="card-title h6 fw-bold">${escapeHtml(item.title || 'Tanpa Judul')}</h5>
-                  <p class="card-text text-muted small mb-2">${new Date(item.date + 'T00:00:00').toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                  <p class="card-text text-muted small mb-2">${formatTanggal(item.date)}</p>
                   <p class="card-text flex-grow-1 small">${escapeHtml(item.caption || '')}</p>
                 </div>
               </div>`;
@@ -1067,9 +1074,7 @@
                 ${mediaContent}
                 <div class="card-body d-flex flex-column" style="cursor: pointer;" onclick="navigateTo('kegiatan/${item.id}')">
                   <h5 class="card-title h6 fw-bold">${escapeHtml(item.title || 'Tanpa Judul')}</h5>
-                  <p class="card-text text-muted small mb-2">
-                    ${new Date(item.date + 'T00:00:00').toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })}
-                  </p>
+                  <p class="card-text text-muted small mb-2">${formatTanggal(item.date)}</p>
                   <p class="card-text flex-grow-1 small">${escapeHtml((item.description || '').substring(0, 100))}...</p>
                   <span class="btn btn-primary btn-sm mt-2 align-self-start">Lihat Detail</span>
                 </div>
@@ -1124,7 +1129,7 @@
             itemEl.innerHTML = `
               <div class="d-flex w-100 justify-content-between">
                 <h5 class="card-title h6 fw-bold">${escapeHtml(a.title)}</h5>
-                <small class="card-text text-muted small mb-2">${new Date(a.date + 'T00:00:00').toLocaleDateString('id-ID')}</small>
+                <small class="card-text text-muted small mb-2">${formatTanggal(a.date)}</small>
               </div>
               <p class="card-text flex-grow-1 small">${escapeHtml(stripHtml(a.message).substring(0, 150))}...</p>`;
             list.appendChild(itemEl);
@@ -1186,7 +1191,7 @@
         <div class="mb-4"><button class="btn btn-outline-primary" onclick="navigateTo('announcement')"><i class="bi bi-arrow-left me-1"></i> Kembali ke daftar</button></div>
         <div class="card card-overdrive p-4">
           <h2>${escapeHtml(a.title)}</h2>
-          <p class="text-muted">${new Date(a.date + 'T00:00:00').toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+          <p class="text-muted">${formatTanggal(a.date)}</p>
           <hr>
           <div class="mt-3">${a.message}</div>
         </div>
@@ -1209,7 +1214,7 @@
           <img src="${b.coverUrl||'https://picsum.photos/800/400'}" class="card-img-top" style="max-height:400px;object-fit:cover;">
           <div class="card-body p-4">
             <h1>${escapeHtml(b.title)}</h1>
-            <p class="text-muted">${new Date(b.date + 'T00:00:00').toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })} • Oleh ${escapeHtml(b.author||'Admin')}</p>
+            <p class="text-muted">${formatTanggal(b.date)} • Oleh ${escapeHtml(b.author||'Admin')}</p>
             <hr>
             <div class="mt-3">${b.content}</div>
           </div>
@@ -1287,7 +1292,7 @@
             <div class="card-body p-4">
               <h1 class="h3">${escapeHtml(item.title)}</h1>
               <p class="text-muted small">
-                <i class="bi bi-calendar-event"></i> ${new Date(item.date + 'T00:00:00').toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                <i class="bi bi-calendar-event"></i> ${formatTanggal(item.date)}
                 ${item.location ? `• <i class="bi bi-geo-alt-fill"></i> ${escapeHtml(item.location)}` : ''}
               </p>
               <hr>
@@ -1788,7 +1793,7 @@
       }
     }
 
-    // Efek putar ikon refresh (dipindah dari style ke sini)
+    // Efek putar ikon refresh
     document.head.insertAdjacentHTML("beforeend", `<style>.animate-spin{animation: spin 1s linear infinite;} @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}</style>`);
 
   </script>
